@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,14 +24,14 @@ export const TestRunner = () => {
       id: '2',
       name: 'should mock API call successfully',
       status: 'pending',
-      code: 'test("api", async () => {\n  const data = await fetchData();\n  expect(data).toBeDefined();\n});',
+      code: 'test("api", async () => {\n  const mockData = { success: true, data: { id: 1 } };\n  const fetchData = jest.fn().mockResolvedValue(mockData);\n  const result = await fetchData();\n  expect(result).toEqual(mockData);\n});',
       category: 'integration'
     },
     {
       id: '3',
       name: 'Button should be disabled while loading',
       status: 'pending',
-      code: 'test("button-loading", () => {\n  render(<Button loading={true} />);\n  expect(screen.getByRole("button")).toBeDisabled();\n});',
+      code: 'test("button-loading", () => {\n  render(<Button loading={true}>Submit</Button>);\n  const button = screen.getByRole("button");\n  expect(button).toBeDisabled();\n  expect(button).toHaveClass("opacity-50");\n});',
       category: 'ui'
     },
     {
@@ -46,7 +45,7 @@ export const TestRunner = () => {
       id: '5',
       name: 'Form validation shows error messages',
       status: 'pending',
-      code: 'test("form-validation", async () => {\n  render(<Form />);\n  await userEvent.click(submit);\n  expect(screen.getByText("Required")).toBeVisible();\n});',
+      code: 'test("form-validation", async () => {\n  render(<ContactForm />);\n  const submitButton = screen.getByRole("button", { name: /submit/i });\n  await userEvent.click(submitButton);\n  expect(screen.getByText("Name must be at least 2 characters.")).toBeVisible();\n});',
       category: 'ui'
     },
     {
