@@ -17,7 +17,7 @@ export const TestRunner = () => {
       id: '1',
       name: 'should add two numbers correctly',
       status: 'pending',
-      code: 'test("add", () => {\n  expect(add(2, 2)).toBe(4);\n});',
+      code: 'test("add", () => {\n  const add = (a: number, b: number) => a + b;\n  expect(add(2, 2)).toBe(4);\n  expect(add(-1, 1)).toBe(0);\n  expect(add(0, 0)).toBe(0);\n});',
       category: 'unit'
     },
     {
@@ -52,14 +52,14 @@ export const TestRunner = () => {
       id: '6',
       name: 'DataGrid interaction is under 200ms',
       status: 'pending',
-      code: 'test("data-grid-performance", async () => {\n  const { container } = render(<DataGrid rows={1000} />);\n  performance.mark("start-interaction");\n  await userEvent.click(screen.getByRole("grid"));\n  performance.mark("end-interaction");\n  const measurement = performance.measure(\n    "interaction",\n    "start-interaction",\n    "end-interaction"\n  );\n  expect(measurement.duration).toBeLessThan(200);\n});',
+      code: 'test("data-grid-performance", async () => {\n  // This test may fail if:\n  // 1. The grid has too many rows (1000) causing slow initial render\n  // 2. Complex cell renderers are used\n  // 3. Heavy DOM operations during scroll/click\n  const { container } = render(<DataGrid rows={1000} />);\n  performance.mark("start-interaction");\n  await userEvent.click(screen.getByRole("grid"));\n  performance.mark("end-interaction");\n  const measurement = performance.measure(\n    "interaction",\n    "start-interaction",\n    "end-interaction"\n  );\n  expect(measurement.duration).toBeLessThan(200);\n});',
       category: 'ui'
     },
     {
       id: '7',
       name: 'Menu interaction completes in 50ms',
       status: 'pending',
-      code: 'test("menu-interaction-speed", async () => {\n  const { container } = render(<Menu />);\n  const observer = new PerformanceObserver((list) => {\n    const entries = list.getEntries();\n    const lastEntry = entries[entries.length - 1];\n    expect(lastEntry.duration).toBeLessThan(50);\n  });\n  observer.observe({ entryTypes: ["interaction"] });\n  await userEvent.click(screen.getByRole("menubutton"));\n});',
+      code: 'test("menu-interaction-speed", async () => {\n  // This test usually passes because:\n  // 1. Menu is a simple component with few children\n  // 2. No complex calculations on click\n  // 3. Uses CSS transitions instead of JS animations\n  const { container } = render(<Menu />);\n  const observer = new PerformanceObserver((list) => {\n    const entries = list.getEntries();\n    const lastEntry = entries[entries.length - 1];\n    expect(lastEntry.duration).toBeLessThan(50);\n  });\n  observer.observe({ entryTypes: ["interaction"] });\n  await userEvent.click(screen.getByRole("menubutton"));\n});',
       category: 'ui'
     },
     {
