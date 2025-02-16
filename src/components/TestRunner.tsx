@@ -48,6 +48,27 @@ export const TestRunner = () => {
       status: 'pending',
       code: 'test("form-validation", async () => {\n  render(<Form />);\n  await userEvent.click(submit);\n  expect(screen.getByText("Required")).toBeVisible();\n});',
       category: 'ui'
+    },
+    {
+      id: '6',
+      name: 'DataGrid interaction is under 200ms',
+      status: 'pending',
+      code: 'test("data-grid-performance", async () => {\n  const { container } = render(<DataGrid rows={1000} />);\n  performance.mark("start-interaction");\n  await userEvent.click(screen.getByRole("grid"));\n  performance.mark("end-interaction");\n  const measurement = performance.measure(\n    "interaction",\n    "start-interaction",\n    "end-interaction"\n  );\n  expect(measurement.duration).toBeLessThan(200);\n});',
+      category: 'ui'
+    },
+    {
+      id: '7',
+      name: 'Menu interaction completes in 50ms',
+      status: 'pending',
+      code: 'test("menu-interaction-speed", async () => {\n  const { container } = render(<Menu />);\n  const observer = new PerformanceObserver((list) => {\n    const entries = list.getEntries();\n    const lastEntry = entries[entries.length - 1];\n    expect(lastEntry.duration).toBeLessThan(50);\n  });\n  observer.observe({ entryTypes: ["interaction"] });\n  await userEvent.click(screen.getByRole("menubutton"));\n});',
+      category: 'ui'
+    },
+    {
+      id: '8',
+      name: 'Form submission INP under 100ms',
+      status: 'pending',
+      code: 'test("form-submission-inp", async () => {\n  const { container } = render(<ContactForm />);\n  performance.mark("inp-start");\n  await userEvent.click(screen.getByRole("button", { name: /submit/i }));\n  performance.mark("inp-end");\n  const interaction = performance.measure("inp", "inp-start", "inp-end");\n  expect(interaction.duration).toBeLessThan(100);\n});',
+      category: 'ui'
     }
   ]);
 
